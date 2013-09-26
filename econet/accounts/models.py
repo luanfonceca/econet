@@ -64,6 +64,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_index=True,
         verbose_name=_(u'Email')
     )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        editable=False,
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        editable=False,
+    )
     is_staff = models.BooleanField(
         default=False,
         verbose_name=_(u'Administrador')
