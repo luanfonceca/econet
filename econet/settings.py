@@ -142,6 +142,7 @@ INSTALLED_APPS = (
 
     # Aplicações internas
     'accounts',
+    'app',
     
     # Django Admin Tema
     'suit', 
