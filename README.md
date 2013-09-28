@@ -11,7 +11,7 @@ Como Instalar e Configurar
     - `$ pip install -r requirements.txt`
 5. Copie o `.sample`, para o seu:
     - `cp settings_local.py.sample settings_local.py`
-6. Configure o `DATABASES`, dentro do arquivo [settings_local](https://github.com/Econet/econet/blob/master/econet/settings_local.py.sample#L20) file.
+6. Configure o `DATABASES`, dentro do arquivo [settings_local](https://github.com/luanfonceca/econet/blob/master/econet/settings_local.py.sample#L14) file.
 7. Sincronize o seu banco, com os Models e as Aplicações externas:
     - ```python manage.py syncdb```
 8. Migre as tabelas do seu banco, com os Models e as Aplicações externas:
