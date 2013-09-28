@@ -1,0 +1,40 @@
+{% load tags %}
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container-fluid col-lg-12">
+    <div class="navbar-header col-lg-3">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-inverse-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'home' %}">
+        <b>Econet</b>
+      </a>
+    </div>
+    <div class="navbar-collapse navbar-inverse-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li {% is_active_tab 'about_us' tab %}>
+          <a href="{% url 'about_us' %}">About us</a>
+        </li>
+      </ul>
+      <form class="col-lg-6">
+        <div style="margin-top: 0.5em;">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li {% is_active_tab 'account' tab 'dropdown' %}>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.nav-collapse -->
+  </div><!-- /.container -->
+</div>

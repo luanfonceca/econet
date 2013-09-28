@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+  <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.css' rel='stylesheet' />
+  <!--[if lte IE 8]>
+    <link href='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.ie.css' rel='stylesheet' >
+  <![endif]-->
+{% endblock extra_head %}
+
+{% block content %}
+  <!-- row is also an option -->
+  <div class="row-fluid">
+    <div id="map"></div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+  <script src='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
+  <script type='text/javascript'>
+    var map = L.mapbox.map('map', 'luanfonceca.map-705soe3f');
+  </script>
+{% endblock %}

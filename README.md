@@ -1,4 +1,4 @@
-Projeto LeiTech
+Projeto Econet
 =======
 
 Como Instalar e Configurar
