@@ -1,1 +1,1 @@
-web: newrelic-admin run-program python econet/manage.py run_gunicorn
+web: newrelic-admin run-program gunicorn --pythonpath econet econet.wsgi
