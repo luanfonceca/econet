@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath econet econet.wsgi
+web: newrelic-admin run-program python econet/manage.py run_gunicorn -b "0.0.0.0:$PORT" -w 3
