@@ -199,7 +199,7 @@ if not os.environ.get('ECONET_PRODUCTION'):
         from settings_local import *
     except ImportError:
         pass
-elif os.environ.get('ECONET_TRAVIS'):
+if os.environ.get('ECONET_TRAVIS'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
