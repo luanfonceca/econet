@@ -192,8 +192,18 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
 
-if not os.environ.get('ECONET_PRODUCTION'):  
+SOUTH_TESTS_MIGRATE = False
+
+if not os.environ.get('ECONET_PRODUCTION'):
     try:
         from settings_local import *
     except ImportError:
         pass
+elif os.environ.get('ECONET_TRAVIS'):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'econet',
+            'USER': 'postgres',
+        }
+    }

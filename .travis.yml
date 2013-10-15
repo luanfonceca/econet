@@ -1,0 +1,24 @@
+language: python
+python:
+  - '2.7'
+services: 
+  - postgres
+env:
+  - DJANGO=1.5 DJANGO_SETTINGS_MODULE="econet.settings" ECONET_TRAVIS=True
+install:
+  - pip install -e requirements.txt
+  - pip install -q psycopg2 --use-mirrors
+before_script:
+  - psql -c 'create database econet;' -U postgres
+  - python econet/manage.py migrate
+script:
+  - python econet/manage.py test accounts app
+deploy:
+  provider: 
+    - heroku
+  api_key:
+    secure: 
+      - MWPoAS1QYy/ffRBbXFFNkPr1YK6iPBCzJyK226GoAsGoEkZvU4dJQGPrb6X7LtilyfHc0TNipNLqMUHUBz9UCzIXYPcUUxf/m+jVpTfM0DF5arz1auyGoG9bVUV4hSXGjafL9rWH6S/bftVhL6iO7KUzdVc13M1Y57PVC8+wxs4=
+  on:
+    repo: 
+      - luanfonceca/econet
