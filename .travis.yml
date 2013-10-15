@@ -10,6 +10,7 @@ install:
   - pip install -q psycopg2 --use-mirrors
 before_script:
   - psql -c 'create database econet;' -U postgres
+  - python econet/manage.py syncdb --noinput
   - python econet/manage.py migrate
 script:
   - python econet/manage.py test accounts app
