@@ -191,7 +191,8 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
 
-try:
-    from settings_local import *
-except ImportError:
-    pass
+if not os.environ.get('ECONET_PRODUCTION'):  
+    try:
+        from settings_local import *
+    except ImportError:
+        pass
