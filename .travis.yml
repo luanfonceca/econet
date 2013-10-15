@@ -2,7 +2,7 @@ language: python
 python:
   - '2.7'
 services: 
-  - postgres
+  - postgresql
 env:
   - DJANGO=1.5 DJANGO_SETTINGS_MODULE="econet.settings" ECONET_TRAVIS=True
 install:
