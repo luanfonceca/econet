@@ -193,6 +193,7 @@ LOGIN_REDIRECT_URL = '/'
 
 
 SOUTH_TESTS_MIGRATE = False
+SOUTH_DATABASE_ADAPTERS = {'default':'south.db.postgresql_psycopg2'}
 
 if not os.environ.get('ECONET_PRODUCTION'):
     try:
