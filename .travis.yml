@@ -23,3 +23,5 @@ deploy:
   on:
     repo: 
       - luanfonceca/econet
+  run:
+    - git push heroku
