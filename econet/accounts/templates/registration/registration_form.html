@@ -7,66 +7,64 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="container-fluid">          
-        <!-- row is also an option -->
-        <div class="row col-lg-offset-1 col-lg-10">
-            <div class="">
-                <div class="page-header">
-                    <h1 id="type">Criar uma conta</h1>
-                </div>
+    <!-- row is also an option -->
+    <div class="row col-lg-offset-1 col-lg-10">
+        <div class="">
+            <div class="page-header">
+                <h1 id="type">Criar uma conta</h1>
             </div>
         </div>
-        <div class="row col-lg-offset-1 col-lg-10">
-            <div class="col-lg-8">
-                <div class="bs-example well">
-                    <h2>Preencha as informações</h2>
-                    <hr/>
-                    <form class="bs-example form-horizontal" method="POST">
-                        {% csrf_token %}
-                        <fieldset>
-                            <div class="form-group">
-                                <label for="id_username" class="col-lg-2 control-label">Nome de usuário</label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" id="id_username" name="username" placeholder="Nome de usuário">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="id_email" class="col-lg-2 control-label">Email</label>
-                                <div class="col-lg-10">
-                                    <input type="text" class="form-control" id="id_email" name="email" placeholder="Email">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="id_password1" class="col-lg-2 control-label">Senha</label>
-                                <div class="col-lg-10">
-                                    <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Senha">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="id_password2" class="col-lg-2 control-label">Senha (novamente)</label>
-                                <div class="col-lg-10">
-                                    <input type="password" class="form-control" id="id_password2" name="id_password2" placeholder="Senha (novamente)">
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <div class="col-lg-10 col-lg-offset-2">
-                                    <input type="submit" class="btn btn-primary btn-block" value="Confirmar" />
-                                </div>
-                            </div>
-                        </fieldset>
-                    </form>
-                </div>
+    </div>
+    <div class="row col-lg-offset-1 col-lg-10">
+        <div class="col-lg-4">
+            <div class="bs-example well">
+                <h2 style="text-align:center">Acessar usando</h2>
+                <hr>
+                <a class="btn btn-block btn-primary btn-lg">Facebook</a>
+                <a class="btn btn-block btn-danger btn-lg">Google+</a>
+                <a class="btn btn-block btn-info btn-lg">Twitter</a>
             </div>
-
-            <div class="col-lg-4">
-                <div class="bs-example well">
-                    <h2 style="text-align:center">Acessar usando</h2>
-                    <hr>
-                    <a class="btn btn-block btn-primary btn-lg">Facebook</a>
-                    <a class="btn btn-block btn-danger btn-lg">Google+</a>
-                    <a class="btn btn-block btn-info btn-lg">Twitter</a>
-                </div>
+        </div>
+        
+        <div class="col-lg-8">
+            <div class="bs-example well">
+                <h2>Preencha as informações</h2>
+                <hr/>
+                <form class="bs-example form-horizontal" method="POST">
+                    {% csrf_token %}
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="id_username" class="col-lg-2 control-label">Nome de usuário</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="id_username" name="username" placeholder="Nome de usuário">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_email" class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="id_email" name="email" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password1" class="col-lg-2 control-label">Senha</label>
+                            <div class="col-lg-10">
+                                <input type="password" class="form-control" id="id_password1" name="password1" placeholder="Senha">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password2" class="col-lg-2 control-label">Senha (novamente)</label>
+                            <div class="col-lg-10">
+                                <input type="password" class="form-control" id="id_password2" name="id_password2" placeholder="Senha (novamente)">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="col-lg-10 col-lg-offset-2">
+                                <input type="submit" class="btn btn-primary btn-block" value="Confirmar" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
         </div>
     </div>

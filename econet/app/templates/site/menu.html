@@ -25,13 +25,17 @@
       </form>
       <ul class="nav navbar-nav navbar-right">
         <li {% is_active_tab 'account' tab 'dropdown' %}>
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <b class="caret"></b></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Sua conta <b class="caret"></b>
+          </a>
           <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+            {% if request.user.is_anonymous %}
+              <li><a href="{% url 'auth_login' %}">Acessar</a></li>
+              <li><a href="{% url 'registration_register' %}">Registrar</a></li>
+            {% else %}
+              <li><a href="javavscript:;">Meu Perfil</a></li>
+              <li><a href="{% url 'auth_logout' %}">Sair</a></li>
+            {% endif %}
           </ul>
         </li>
       </ul>

@@ -2,41 +2,55 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Econet</title>
-    <meta name="description" content="">
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+    <head>
+        <meta charset="utf-8">
+        <title>Econet</title>
+        <meta name="description" content="">
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
 
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/econet.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/mapbox.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
-    
-    {% block extra_head %}{% endblock %}
-  </head>
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/econet.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/mapbox.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css" />
+        
+        {% block extra_head %}{% endblock %}
+    </head>
 
-  <body>
-    {% block menu %}
-      {% include "site/menu.html" %}
-    {% endblock menu %}
-    
-    <div class="fullscreen">
-      <!-- container is also an option -->
-      <div class="container-fluid">
-        {% block content %}{% endblock %}
-      </div>
-    </div>
+    <body>
+        {% block menu %}
+            {% include "site/menu.html" %}
+        {% endblock menu %}
+        
+        <div class="fullscreen">
+            <div class="container-fluid">
+                <div class="row col-lg-offset-1">
+                    {% for message in messages %}
+                        <div class="col-lg-10">
+                            <div class="bs-example">
+                                <div class="alert alert-dismissable alert-{{ message.tags }}">
+                                    <button type="button" class="close" data-dismiss="alert">x</button>
+                                    {{ message }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="container-fluid">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
 
-    <!--[if lt IE 7]>
-      <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-    <![endif]-->
-    <!--[if lt IE 9]>
-      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    
-    <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
-    <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+        <!--[if lt IE 9]>
+            <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        
+        <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
+        <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
 
-    {% block extra_js %}{% endblock %}
-  </body>
+        {% block extra_js %}{% endblock %}
+    </body>
 </html>
