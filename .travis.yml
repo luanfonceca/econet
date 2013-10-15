@@ -14,6 +14,8 @@ before_script:
   - python econet/manage.py migrate
 script:
   - python econet/manage.py test accounts app
+after_script:
+  - git push heroku
 deploy:
   provider: 
     - heroku
@@ -21,7 +23,7 @@ deploy:
     secure: 
       - MWPoAS1QYy/ffRBbXFFNkPr1YK6iPBCzJyK226GoAsGoEkZvU4dJQGPrb6X7LtilyfHc0TNipNLqMUHUBz9UCzIXYPcUUxf/m+jVpTfM0DF5arz1auyGoG9bVUV4hSXGjafL9rWH6S/bftVhL6iO7KUzdVc13M1Y57PVC8+wxs4=
   on:
+    app: 
+      - econet
     repo: 
       - luanfonceca/econet
-  run:
-    - git push heroku

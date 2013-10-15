@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'south',
     'bootstrap_toolkit',
+    'bootstrap3',
     'registration',
     'gunicorn',
 
