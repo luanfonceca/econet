@@ -1,5 +1,7 @@
 Projeto Econet
 =======
+[![Build Status](https://travis-ci.org/luanfonceca/econet.png?branch=master)](https://travis-ci.org/luanfonceca/econet)
+
 
 Como Instalar e Configurar
 ===============
