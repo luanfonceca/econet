@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load bootstrap_toolkit %}
 {% load bootstrap3 %}
 {% load i18n %}
 
@@ -22,18 +23,18 @@
                     {% csrf_token %}
                     {% bootstrap_form form layout="horizontal" field_class="col-md-9" %}
 
-                    <div class="form-group">
+                    {% buttons %}
                         <div class="col-lg-9 col-lg-offset-2">
                             <input type="submit" class="btn btn-primary btn-block" value="{% trans 'Log in' %}" />
                         </div>
-                    </div>
+                    {% endbuttons %}
                 </form>
                 <div class="col-lg-offset-2">
                     <p>
-                        {% trans "Forgot password" %}? <a href="{% url 'auth_password_reset' %}">{% trans "Reset it" %}</a>!
+                        Esqueceu sua senha? <a href="{% url 'auth_password_reset' %}">Recupere-a</a>!
                     </p>
                     <p>
-                        {% trans "Not member" %}? <a href="{% url 'registration_register' %}">{% trans "Register" %}</a>!
+                        Não é um membro? <a href="{% url 'registration_register' %}">Cadastre-se</a>!
                     </p>
                 </div>
             </div>
