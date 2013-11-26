@@ -57,3 +57,11 @@ def logout(request):
     auth.logout(request)
     messages.info(request, u"Obrigado por acessar nosso sistema.")
     return redirect('auth_login')
+
+
+def profile(request):
+    template_context = {
+        "user": auth.get_user(request)
+    }
+    return render_to_response('users/profile.html', template_context,
+            context_instance=RequestContext(request))

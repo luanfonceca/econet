@@ -9,11 +9,8 @@ Criado por Luan Fonseca em 23/10/2013.
 from django.contrib import admin
 from django.contrib.contenttypes.models import ContentType
 
-# Registrando todas os Models da app na Admin.
-map(lambda x:
-	admin.site.register(
-		x.model_class()
-	) if x.model_class() else None, 
-	ContentType.objects.filter(app_label=__package__)
-)
-	
+from app.models import CheckIn, Item, CollectSpot
+
+admin.site.register(CheckIn)
+admin.site.register(Item)
+admin.site.register(CollectSpot)

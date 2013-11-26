@@ -19,7 +19,7 @@
     <div id="map"></div>
   </div>
 
-  <div id="id_block_add_marker" class="row col-lg-offset-3 col-lg-6 hide">
+  <div id="id_block_add_marker" class="fake-modal row col-lg-offset-3 col-lg-6 hide">
     <div class="well">
       <div class="page-header">
         <h1 id="type">Adicionar Ponto de Coleta</h1>
@@ -29,10 +29,63 @@
             <div class="bs-example">
               <form class="bs-example form-horizontal" method="POST" action="{% url 'collect_spot_create' %}">
                 {% csrf_token %}
-                {% bootstrap_form form layout="horizontal" field_class="col-md-9" %}
+                {% bootstrap_form collect_spot_form layout="horizontal" field_class="col-md-9" %}
 
                 {% buttons %}
                   <div class="col-lg-offset-2 col-lg-10">
+                    <input type="reset" class="btn btn-default" value="Cancelar" />
+                    <input type="submit" class="btn btn-primary" value="Salvar" />
+                  </div>
+                {% endbuttons %}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="id_block_descart_item" class="fake-modal row col-lg-offset-3 col-lg-6 hide">
+    <div class="well">
+      <div class="page-header">
+        <h1 id="type">Descartar um Material</h1>
+        <br>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="bs-example">
+              <form class="bs-example form-horizontal" method="POST" action="">
+                {% csrf_token %}
+
+                <table class="table table-striped table-bordered table-hover">
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th>Quantidade</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <input id="id_descarted_itens-TOTAL_FORMS" name="descarted_itens-TOTAL_FORMS" type="hidden" value="{{ descart_item_form.forms.0.item.field.queryset.count }}">
+                    <input id="id_descarted_itens-INITIAL_FORMS" name="descarted_itens-INITIAL_FORMS" type="hidden" value="0">
+                    <input id="id_descarted_itens-MAX_NUM_FORMS" name="descarted_itens-MAX_NUM_FORMS" type="hidden" value="1000">
+                    {% for item in descart_item_form.forms.0.item.field.queryset %}
+                      <tr data-item="{{ item.id }}">
+                        <td>
+                          <label for="id_descarted_itens-{{ forloop.counter0 }}-amount">
+                            <h4>{{ item.name }}</h4>
+                          </label>
+                        </td>
+                        <td>
+                          <div class="col-md-9">
+                            <input placeholder="Quantidade" class="form-control" id="id_descarted_itens-{{ forloop.counter0 }}-amount" maxlength="150" name="descarted_itens-{{ forloop.counter0 }}-amount" type="text">
+                          </div>
+                          <input type="hidden" value="{{ item.pk }}" name="descarted_itens-{{ forloop.counter0 }}-item" id="id_descarted_itens-{{ forloop.counter0 }}-item">
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                {% buttons %}
+                  <div class="col-lg-offset-4 col-lg-8">
                     <input type="reset" class="btn btn-default" value="Cancelar" />
                     <input type="submit" class="btn btn-primary" value="Salvar" />
                   </div>
@@ -49,21 +102,79 @@
 {% block extra_js %}
   <script src='http://api.tiles.mapbox.com/mapbox.js/v1.3.1/mapbox.js'></script>
   <script type='text/javascript'>
-    var map = L.mapbox.map('map', 'luanfonceca.map-705soe3f');
+    var map = L.mapbox.map('map', 'luanfonceca.map-705soe3f'),
+        markerLayer = L.mapbox.markerLayer().addTo(map);
     
     map.on('click', function(e){
+      // NOTEME: Hide all modals
+      $(".fake-modal").addClass('hide');
+
       $("#id_block_add_marker").removeClass("hide");
       
       $("#id_latitude").val(e.latlng.lat);
       $("#id_longitude").val(e.latlng.lng);
     });
 
-    $("#id_block_add_marker").find('input[type="reset"]').on('click', function(e){
-      $("#id_block_add_marker").addClass("hide");
+    $(".fake-modal").find('input[type="reset"]').on('click', function(e){
+      $(this).parents(".fake-modal").addClass("hide");
+      $("#id_block_descart_item").find('table tbody tr').show();
     });
-    
-    L.mapbox.markerLayer()
-      .loadURL('{% url "collect_spot_json" %}')
-      .addTo(map);
+
+    markerLayer.on('layeradd', function(e) {
+      var marker = e.layer,
+          feature = marker.feature;
+
+      // Create custom popup content
+      var popupContent = '<h4>' + feature.properties.title + '</h4>' +
+      '<h5>' + feature.properties.description + '</h5>' +
+      '<a data-itens="' + feature.properties.itens + '" class="btn btn-block btn-success" href="{% if request.user.pk %}#descart_item{% else %}{% url 'auth_login' %}{% endif %}">' +
+        'Descartar' +
+      '</a>' +
+      '<input type="hidden" value="' + feature.properties.url + '">';
+
+      // http://leafletjs.com/reference.html#popup
+      marker.bindPopup(popupContent, {minWidth: 320});
+    });
+
+    $.getJSON('{% url "collect_spot_json" %}', function(data){
+      markerLayer.setGeoJSON(data);
+    });
+
+    $(document).on('click', 'a[href="#descart_item"]', function(){
+      // NOTEME: Hide all modals
+      $(".fake-modal").addClass('hide');
+
+      $("#id_block_descart_item").find('form').attr(
+        'action', $(this).next().attr('value')
+      );
+      var tr_itens = $("#id_block_descart_item").find('table tbody tr'),
+          cspot_itens = $(this).attr('data-itens').split(',');
+      
+      console.log(tr_itens);
+      for (var i = tr_itens.length - 1; i >= 0; i--) {
+        console.log(cspot_itens + '   ' + $(tr_itens[i]).attr('data-item'));
+        console.log(cspot_itens.indexOf($(tr_itens[i]).attr('data-item')) == -1);
+        if (cspot_itens.indexOf($(tr_itens[i]).attr('data-item')) == -1) {
+          $(tr_itens[i]).hide();
+        };
+      };
+      $("#id_block_descart_item").removeClass("hide");      
+    });
+
+
+    function search() {
+      var searchString = $('#id_search').val().toLowerCase();
+      function showTitle(feature) {
+          return feature.properties.title
+              .toLowerCase()
+              .indexOf(searchString) !== -1;
+      }
+      console.log(searchString);
+
+      markerLayer.setFilter(showTitle);
+
+    }
+    $('#id_search').keyup(search);
+
   </script>
 {% endblock %}

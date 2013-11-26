@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block menu %}
+  {% include "site/menu.html" with tab='account' %}
+{% endblock menu %}
+
+{% block content %}
+  <!-- row is also an option -->
+  <div class="row col-lg-offset-1 col-lg-10">
+    <div class="">
+      <div class="page-header">
+        <h1 id="type">Perfil</h1>
+      </div>
+    </div>
+  </div>
+  <div class="row col-lg-offset-1 col-lg-10">
+    <div class="col-lg-6">
+      <div class="bs-example">
+        <h2>Descartes:</h2>
+        {% for check_in in user.check_ins.all %}
+          <div class="bs-example">
+            <p class="text-primary">{{ check_in }} - {{ check_in.created_at }}</p>
+          </div>
+        {% empty %}
+          <div class="bs-example">
+            <p class="text-primary">
+              Nenhum descarte até o momento.
+            </p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}

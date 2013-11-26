@@ -66,7 +66,8 @@ class Item(models.Model):
     bounties = models.ManyToManyField(
         to='app.Bounty',
         related_name='itens',
-        verbose_name=u'Recompenças'
+        verbose_name=u'Recompenças',
+        blank=True, null=True
     )
     
     class Meta:
@@ -102,7 +103,6 @@ class CollectSpot(models.Model):
         overwrite=True
     )
 
-
     # relations
     collectors = models.ManyToManyField(
         to='accounts.User', 
@@ -120,6 +120,31 @@ class CollectSpot(models.Model):
         verbose_name_plural = 'Pontos de Coleta'
 
 
+class DescartedItem(models.Model):
+    amount = models.CharField(
+        max_length=150, 
+        null=True, 
+        blank=True, 
+        verbose_name=u'Quantidade'
+    )
+
+    # relations 
+    check_in = models.ForeignKey(
+        to='app.CheckIn',
+        related_name='descarted_itens', 
+        verbose_name=u'Check-In',
+    )
+    item = models.ForeignKey(
+        to='app.Item',
+        related_name='descarted_itens', 
+        verbose_name=u'Item',
+    )
+
+    class Meta:
+        verbose_name = 'Item Descartado'
+        verbose_name_plural = 'Itens Descartados'
+    
+
 class CheckIn(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -135,28 +160,26 @@ class CheckIn(models.Model):
         verbose_name=u'Ponto de Coleta',
     )
     itens = models.ManyToManyField(
-        to='app.Item', 
+        to='app.Item',
+        through='app.DescartedItem',
+        null=True, 
+        blank=True, 
         related_name='check_ins',
-        verbose_name=u'Itens',
+        verbose_name=u'Itens'
     )
     bounties = models.ManyToManyField(
         to='app.Bounty', 
         related_name='check_ins',
         verbose_name=u'Recompenças',
+        blank=True, null=True
     )
+
     class Meta:
         verbose_name = 'Check-In'
         verbose_name_plural = 'Check-Ins'
 
-
-@receiver(post_save, sender=CollectSpot)
-def append_itens_to_descriptions(**kwargs):
-    obj = kwargs.get('instance')
-    update_fields = kwargs.get('update_fields') or []
-    if kwargs.get('created') or \
-       'accepted_itens' in update_fields:
-        obj.description = map(
-            lambda x: '\nItem Aceito: %s' % x,
-            obj.accepted_itens.values_list('name', flat=True)
+    def __unicode__(self):
+        return u"%s - %s" % (
+            self.collect_spot.name, 
+            ', '.join(self.itens.values_list('name', flat=True)) or 'Nenhum Item'
         )
-        obj.save()

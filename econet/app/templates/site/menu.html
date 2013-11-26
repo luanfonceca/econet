@@ -20,7 +20,7 @@
       </ul>
       <form class="col-lg-6">
         <div style="margin-top: 0.5em;">
-          <input type="text" class="form-control" placeholder="Search">
+          <input type="text" class="form-control" placeholder="Search" id="id_search" name="search">
         </div>
       </form>
       <ul class="nav navbar-nav navbar-right">
@@ -30,7 +30,7 @@
           </a>
           <ul class="dropdown-menu">
             {% if request.user.pk %}
-              <li><a href="javavscript:;">Meu Perfil</a></li>
+              <li><a href="{% url 'profile' %}">Meu Perfil</a></li>
               <li><a href="{% url 'auth_logout' %}">Sair</a></li>
             {% else %}
               <li><a href="{% url 'auth_login' %}">Acessar</a></li>

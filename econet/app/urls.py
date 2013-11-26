@@ -40,4 +40,6 @@ urlpatterns = patterns('',
         view=BountyDeleteView.as_view(),
         name='bounty_delete'
     ),
+    
+    url(r'^spot/(?P<pk>\d+?)/descart/item/?$', view=collect_spot.descart_item, name="descart_item"),
 )

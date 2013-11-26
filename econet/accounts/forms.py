@@ -27,9 +27,8 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'password1',
-                  'password2', 'is_colector',
-                  'first_name', 'last_name']
+        fields = ['first_name', 'last_name',
+                  'email', 'password1', 'password2']
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
@@ -59,6 +58,12 @@ class UserForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super(UserForm, self).save(commit=False)
+
+        # FIXME: for now
+        user.is_staff = True
+        user.is_supervisor = True
+        user.is_superuser = True
+        
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()

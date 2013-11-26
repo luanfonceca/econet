@@ -157,7 +157,7 @@ INSTALLED_APPS = (
     # Aplicações externas
     'django_localflavor_br',
     'django_extensions',
-    'south',
+    # 'south',
     'bootstrap_toolkit',
     'bootstrap3',
     'gunicorn',
