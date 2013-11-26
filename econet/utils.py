@@ -3,7 +3,7 @@
 """
 utils.py
 
-Criado por Luan Fonseca <luanfonceca@gmail.com> em 17/06/2013.
+Criado por Luan Fonseca em 17/06/2013.
 """
 
 from django.utils import timezone

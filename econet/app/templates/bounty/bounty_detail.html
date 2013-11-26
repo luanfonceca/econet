@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block breadcrumbs %}
+  <ul class='breadcrumb'>
+    <li>
+      <a href='{% url "bounty_list" %}'>
+        {% trans "Bountys" %}
+      </a>
+      <span class='divider'>
+        /
+      </span>
+    </li>
+    <li>
+      <a href='{% url "bounty_detail" object.pk %}'>
+        {% trans "Bounty Detail" %}
+      </a>
+      <span class='divider'>
+        /
+      </span>
+    </li>
+  </ul>
+{% endblock %}
+
+
+{% block header-link %}
+  <a href='{{ object.get_absolute_url }}'>
+    {% trans "Bounty Detail" %}
+  </a>
+{% endblock %}
+
+{% block header-description %}
+  {% trans "A page representing an individual object." %}
+{% endblock %}
+
+{% block content %}
+  {% include 'bounty/object_table_detail.html' %}
+  <form action='{% url "bounty_delete" pk=object.pk %}' charset='utf-8' method='post'>
+    <fieldset>
+      {% csrf_token %}
+      <div class='form-actions'>
+        <a class='btn btn-success' href='{% url "bounty_update" pk=object.pk %}'>
+          {% trans "Update" %}
+        </a>
+        <button class='btn btn-danger' type='submit'>
+          {% trans "Delete" %}
+        </button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

@@ -110,6 +110,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
+
+    # "allauth.account.context_processors.account",
+    # "allauth.socialaccount.context_processors.socialaccount",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -118,6 +121,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    # 'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 ROOT_URLCONF = 'urls'
@@ -136,6 +146,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Django Admin Tema
+    # 'suit', 
+    'django.contrib.admin',
+
+    # Aplicações internas
+    'accounts',
+    'app',
     
     # Aplicações externas
     'django_localflavor_br',
@@ -143,16 +160,15 @@ INSTALLED_APPS = (
     'south',
     'bootstrap_toolkit',
     'bootstrap3',
-    'registration',
     'gunicorn',
-
-    # Aplicações internas
-    'accounts',
-    'app',
     
-    # Django Admin Tema
-    'suit', 
-    'django.contrib.admin',
+    # All Auth Theme
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.twitter',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -185,22 +201,43 @@ LOGGING = {
 }
 
 # Django BaseUser Models
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USER_EMAIL_FIELD = 'email'
+# ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+# ACCOUNT_USER_EMAIL_FIELD = 'email'
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
-
-SOUTH_TESTS_MIGRATE = False
-SOUTH_DATABASE_ADAPTERS = {'default':'south.db.postgresql_psycopg2'}
+# Django AllAuth app
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = 'email'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# SOCIALACCOUNT_PROVIDERS = {
+#     'facebook': {
+#         'LOCALE_FUNC': lambda request: 'pt_BR'
+#     },
+#     'google': {
+#         'SCOPE': ['https://www.googleapis.com/auth/userinfo.profile'],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online'
+#         }
+#     },
+#     'openid': {
+#         'SERVERS': [{
+#             'id': 'google',
+#             'name': 'Google',
+#             'openid_url': 'https://www.google.com/accounts/o8/id'
+#         }]
+#     }
+# }
 
 if not os.environ.get('ECONET_PRODUCTION'):
     try:
         from settings_local import *
     except ImportError:
         pass
+
 if os.environ.get('ECONET_TRAVIS'):
     DATABASES = {
         'default': {

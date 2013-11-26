@@ -20,8 +20,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     # Aplicações
-    url(r'^accounts/', include('accounts.urls')),
-    url(r'^accounts/', include('registration.backends.simple.urls')),
-
     url(r'^', include('app.urls')),
+    url(r'^accounts/', include('accounts.urls')),
+    # url(r'^accounts/', include('registration.urls')),
+
 )

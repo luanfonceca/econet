@@ -3,7 +3,7 @@
 u"""
 models.py
 
-Criado por Luan Fonseca em 08/08/2013.
+Criado por Luan Fonseca em 23/10/2013.
 """
 
 from django.contrib import admin

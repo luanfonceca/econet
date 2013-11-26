@@ -1,0 +1,37 @@
+
+
+{% extends 'base.html' %}
+
+{% load i18n %}
+
+{% block title %}
+  {% trans "Product Confirm Delete" %}
+{% endblock %}
+
+{% block header-link %}
+  <a href='{% url "bounty_delete" pk=object.pk %}'>
+    {% trans "Product Confirm Delete" %}
+  </a>
+{% endblock %}
+
+{% block header-description %}
+  {% trans "A view that displays a confirmation page (on GET) and deletes an existing object (on POST)." %}
+{% endblock %}
+
+{% block content %}
+  <h2>
+    {% trans "Delete this Product?" %}
+  </h2>
+  <br />
+  {% include 'bounty/object_table_detail.html' %}
+  <form action='' charset='utf-8' method='post'>
+    <fieldset>
+      {% csrf_token %}
+      <div class='form-actions'>
+        <button class='btn btn-danger' type='submit'>
+          {% trans "Delete" %}
+        </button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}
