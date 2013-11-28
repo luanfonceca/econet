@@ -21,19 +21,19 @@ class CollectSpotForm(forms.ModelForm):
         	'longitude': forms.HiddenInput(),
         }
 
-    def clean_description(self):
-        itens_description = []
-        if 'accepted_itens' in self.changed_data:
-            itens_description = map(
-                lambda x: 'Item Aceito: %s' % x,
-                Item.objects.filter(
-                    pk__in=self.data.getlist('accepted_itens')
-                ).values_list('name', flat=True)
-            )
-        return "%s\n\n%s" % (
-            self.cleaned_data['description'], 
-            '\n'.join(itens_description)
-        )
+    # def clean_description(self):
+    #     itens_description = []
+    #     if 'accepted_itens' in self.changed_data:
+    #         itens_description = map(
+    #             lambda x: 'Item Aceito: %s' % x,
+    #             Item.objects.filter(
+    #                 pk__in=self.data.getlist('accepted_itens')
+    #             ).values_list('name', flat=True)
+    #         )
+    #     return "%s\n\n%s" % (
+    #         self.cleaned_data['description'], 
+    #         '\n'.join(itens_description)
+    #     )
 
 
 class DescartItemForm(forms.ModelForm):

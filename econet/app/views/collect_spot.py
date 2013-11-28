@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
 from django.template import RequestContext
 from django.template.defaultfilters import linebreaks
 from django.shortcuts import redirect
@@ -31,15 +34,35 @@ def create(request):
 
 def get_json(request):
     data = []
-    for cs in CollectSpot.objects.values():
-        description = linebreaks(cs.get('description', ''))
-        description += '''
-        <div class="descart_item_block">
-            <a class="btn btn-block btn-success" href="/ioaspkaspaos/saoipokslas">
-                Descartar
-            </a>
-        </div>
-        '''
+    for cs in CollectSpot.objects.all():
+        description = '''
+        <blockquote>%(description)s</blockquote>
+        <strong>Local</strong>: %(local)s
+
+        <br><br>
+        <strong>Itens aceitos</strong>: %(itens)s
+        ''' % {
+            'description': linebreaks(cs.description or u'Sem descrição definida.'),
+            'local': cs.local or u'Sem local definido',
+            'itens': ', '.join(map(
+                lambda x: x.name,
+                cs.accepted_itens.all()
+            )) or u'Nenhum Item.'
+        }
+
+        itens = Item.objects.filter(
+            collect_spots=cs.id
+        ).values('id', 'name')
+
+        def join_and_map(map_key, objects, join_key=','):
+            def map_func(x):
+                data = x.get(map_key)
+                if not isinstance(data, basestring):
+                    data = str(data)
+                return data
+            return str(join_key).join(
+                map(map_func, objects)
+            )
         data.append({ 
             'type': 'FeatureCollection',
             'features': [{ 
@@ -47,8 +70,8 @@ def get_json(request):
                 'geometry': {
                     'type': 'Point', 
                     'coordinates': [
-                        cs.get('longitude'),
-                        cs.get('latitude'),
+                        cs.longitude,
+                        cs.latitude,
                     ]
                 },
                 'properties': {
@@ -56,10 +79,12 @@ def get_json(request):
                     'marker-color': '#505050',
                     'marker-symbol': 'waste-basket',
 
-                    'title': cs.get('name'),
-                    'itens': ','.join(map(lambda x: str(x), Item.objects.filter(collect_spots=cs.get('id')).values_list('id', flat=True))),
-                    'description': linebreaks(cs.get('description', '')),
-                    'url': reverse('descart_item', args=[cs.get('id')])
+                    'title': cs.name,
+                    'local': cs.local,
+                    'itens': join_and_map('id', itens),
+                    'itens_name': join_and_map('name', itens),
+                    'description': description,
+                    'url': reverse('descart_item', args=[cs.id])
                 }
             }]
         })

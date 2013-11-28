@@ -126,11 +126,15 @@
 
       // Create custom popup content
       var popupContent = '<h4>' + feature.properties.title + '</h4>' +
-      '<h5>' + feature.properties.description + '</h5>' +
-      '<a data-itens="' + feature.properties.itens + '" class="btn btn-block btn-success" href="{% if request.user.pk %}#descart_item{% else %}{% url 'auth_login' %}{% endif %}">' +
-        'Descartar' +
-      '</a>' +
-      '<input type="hidden" value="' + feature.properties.url + '">';
+                         '<h5>' + feature.properties.description + '</h5>';
+      if (feature.properties.itens) {
+        popupContent += '<a data-itens="' + feature.properties.itens + 
+        '" class="btn btn-block btn-success" href="{% if request.user.pk %}#descart_item{% else %}{% url 'auth_login' %}{% endif %}">' +
+        'Descartar Itens </a>' +
+        '<input type="hidden" value="' + feature.properties.url + '">';
+      } else {
+        popupContent += '<a class="btn btn-block btn-default disabled">Não há itens.</a>';
+      }
 
       // http://leafletjs.com/reference.html#popup
       marker.bindPopup(popupContent, {minWidth: 320});
@@ -150,10 +154,7 @@
       var tr_itens = $("#id_block_descart_item").find('table tbody tr'),
           cspot_itens = $(this).attr('data-itens').split(',');
       
-      console.log(tr_itens);
       for (var i = tr_itens.length - 1; i >= 0; i--) {
-        console.log(cspot_itens + '   ' + $(tr_itens[i]).attr('data-item'));
-        console.log(cspot_itens.indexOf($(tr_itens[i]).attr('data-item')) == -1);
         if (cspot_itens.indexOf($(tr_itens[i]).attr('data-item')) == -1) {
           $(tr_itens[i]).hide();
         };
@@ -161,20 +162,24 @@
       $("#id_block_descart_item").removeClass("hide");      
     });
 
-
     function search() {
-      var searchString = $('#id_search').val().toLowerCase();
-      function showTitle(feature) {
-          return feature.properties.title
-              .toLowerCase()
-              .indexOf(searchString) !== -1;
+      var to_search = $('#id_search').val().toLowerCase();
+      function find_in_properties(feature) {
+          function find(property, to_search) {
+            return property.toLowerCase()
+                      .indexOf(to_search) !== -1 
+          }
+
+          var properties = feature.properties;
+          return (
+            find(properties.title, to_search) ||
+            find(properties.local, to_search) ||
+            find(properties.itens_name, to_search)
+          )
       }
-      console.log(searchString);
 
-      markerLayer.setFilter(showTitle);
-
+      markerLayer.setFilter(find_in_properties);
     }
     $('#id_search').keyup(search);
-
   </script>
 {% endblock %}

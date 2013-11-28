@@ -87,6 +87,13 @@ class CollectSpot(models.Model):
         verbose_name=u'Descrição', 
         blank=True,
     )
+    local = models.CharField(
+        verbose_name=u'Local', 
+        max_length=50,
+        help_text=u'Departamento, Região, Bloco ou Ponto de Referência.',
+        null=True,
+        blank=True
+    )
     latitude = models.CharField(
         verbose_name=u'Latitude', 
         max_length=50
