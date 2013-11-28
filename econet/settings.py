@@ -231,9 +231,10 @@ LOGIN_REDIRECT_URL = '/'
 #     }
 # }
 
-if not os.environ.get('ECONET_PRODUCTION'):
+if os.environ.get('ECONET_PRODUCTION'):
     INSTALLED_APPS.append('south')
     
+if not os.environ.get('ECONET_PRODUCTION'):
     try:
         from settings_local import *
     except ImportError:
