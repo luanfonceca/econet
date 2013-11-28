@@ -28,6 +28,8 @@ def create(request):
             earned_points = 200
             user.earned_points += earned_points
             user.save()
+            # FIXME: Para ele atualizar a variavel do request
+            request.user = user 
         messages.success(request, u'Salvou o novo Ponto.')
     else:
         messages.error(request, u'Deu Error visse')
