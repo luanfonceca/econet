@@ -10,7 +10,7 @@ from app.views import collect_spot
 
 urlpatterns = patterns('',
     url(regex=r'^$', view=HomeView.as_view(), name='home'),
-    url(r'^about_us$', TemplateView.as_view(template_name="site/about_us.html"), name="about_us"),
+    url(regex=r'^timeline$', view=TimelineView.as_view(), name='timeline'),
     
     url(r'^collect_spots/create/?$', view=collect_spot.create, name="collect_spot_create"),
     url(r'^collect_spots/get_json/?$', view=collect_spot.get_json, name="collect_spot_json"),

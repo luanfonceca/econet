@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+
 u"""
 models.py
 
@@ -10,6 +11,30 @@ from django.db import models
 from django.db.models.signals import *
 from django.dispatch import receiver
 from django_extensions.db.fields import AutoSlugField
+
+from accounts.models import User
+
+class Timeline(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    action = models.CharField(null=False, max_length=50)
+    entity = models.CharField(null=False, max_length=50)
+    description = models.TextField(
+        verbose_name=u'Descrição', 
+        blank=True,
+    )
+
+    # relations
+    user = models.ForeignKey(
+        to='accounts.User',
+        related_name='timeline',
+        verbose_name=u'Usuario',
+        null=True, blank=True
+    )        
+
+    class Meta:
+        verbose_name = u'Atualização'
+        verbose_name_plural = u'Atualizações'
+        ordering = ['-created_at']
 
 
 class Bounty(models.Model):
@@ -126,6 +151,10 @@ class CollectSpot(models.Model):
         verbose_name = 'Ponto de Coleta'
         verbose_name_plural = 'Pontos de Coleta'
 
+    @property
+    def pretty_itens(self):
+        return ', '.join(self.accepted_itens.values('name'))
+        
 
 class DescartedItem(models.Model):
     amount = models.CharField(
@@ -189,4 +218,58 @@ class CheckIn(models.Model):
         return u"%s - %s" % (
             self.collect_spot.name, 
             ', '.join(self.itens.values_list('name', flat=True)) or 'Nenhum Item'
+        )
+
+@receiver(post_save, sender=CollectSpot)
+@receiver(post_save, sender=Item)
+@receiver(post_save, sender=User)
+def update_timeline(**kwargs):
+    obj = kwargs.get('instance')
+    entity = kwargs.get('sender')._meta.verbose_name
+    user = None
+    description = None
+
+    if kwargs.get('created'):
+        if isinstance(obj, CollectSpot):
+            action = u'Criação do %s' % entity   
+            try:
+                user = obj.collectors.latest('id')
+            except User.DoesNotExist:
+                pass
+
+            description = u'''
+            %(action)s, chamado "%(cs_name)s"
+            na localidade: %(local)s. 
+            Que está apto à receber: %(pretty_itens)s.
+            ''' % {
+                'cs_name': obj.name or u'Sem nome',
+                'user': user or u'Sem usuário',
+                'action': action,
+                'entity': entity,
+                'local': obj.local or u'Sem localidade',
+                'pretty_itens': obj.pretty_itens or u'Sem itens'
+            }
+        elif isinstance(obj, Item):
+            action = u'Criação de um %s' % entity   
+            description = u'''
+            %(action)s, chamado "%(item_name)s".
+            ''' % {
+                'action': action,
+                'item_name': obj.name or 'Sem nome',
+            }
+        elif isinstance(obj, User):
+            user = obj
+            action = u'Criação de um %s' % entity
+            description = u'''
+            %(action)s, chamado <strong>"%(user_name)s</strong>".
+            ''' % {
+                'action': action,
+                'user_name': obj.get_full_name() or obj.email,
+            }
+
+        Timeline.objects.create(
+            user=user,
+            action=action,
+            entity=entity,
+            description=description
         )

@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 
 from accounts.models import User
-from app.models import CollectSpot, CheckIn, Item
+from app.models import CollectSpot, CheckIn, Item, Timeline
 from app.forms import CollectSpotForm, CheckInDescartItemFormSet
 
 def create(request):
@@ -108,6 +108,25 @@ def descart_item(request, pk):
     if checking_itens_formset.is_valid():
         checking_itens_formset.save()
         messages.success(request, u'Salvou as coisa.')
+
+        description = u'''
+        O usuário <strong>%(user)s</strong> 
+        descartou no Ponto de Coleta "%(cs_name)s",
+        os seguintes itens: %(itens_name)s.
+        ''' % {
+            'user': user.get_full_name() or user.email,
+            'cs_name': collect_spot.name or u'Sem nome',
+            'itens_name': ', '.join(
+                check_in.itens.values_list(
+                    'name', flat=True
+            )) or 'Nenhum Item'
+        }
+        Timeline.objects.create(
+            user=user,
+            action='Descarte de Item',
+            entity='Check-in',
+            description=description
+        )
     else:
         messages.error(request, u'Deu Error visse')
     return redirect('home')

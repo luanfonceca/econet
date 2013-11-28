@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from app.models import Item
+from app.models import Item, Timeline
 from app.forms import (
 	CollectSpotForm, CheckInDescartItemFormSet
 )
@@ -13,4 +13,12 @@ class HomeView(TemplateView):
         context['collect_spot_form'] = CollectSpotForm()
         context['descart_item_form'] = CheckInDescartItemFormSet()
         context['avalible_itens'] = Item.objects.all()
+        return context
+
+class TimelineView(TemplateView):
+    template_name = 'site/timeline.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TimelineView, self).get_context_data(**kwargs)
+        context['timeline'] = Timeline.objects.all()
         return context

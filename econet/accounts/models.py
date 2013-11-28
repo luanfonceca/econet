@@ -33,7 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # REQUIRED_FIELDS = ['email']
 
     class Meta:
-        verbose_name = _('user')
+        verbose_name = u'Usuário'
         verbose_name_plural = _('users')
 
     def __unicode__(self):
