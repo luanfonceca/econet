@@ -20,5 +20,5 @@ class TimelineView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TimelineView, self).get_context_data(**kwargs)
-        context['timeline'] = Timeline.objects.all()
+        context['timeline'] = Timeline.objects.all()[:10]
         return context
