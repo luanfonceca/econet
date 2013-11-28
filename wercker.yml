@@ -6,10 +6,10 @@ services:
 build:
   # The steps that will be executed on build
   steps:
-    # Use this virtualenv step for python 3.2
-    - virtualenv:
-        name: setup virtual environment
-        python_location: /usr/bin/python2.6
+    # # Use this virtualenv step for python 3.2
+    # - virtualenv:
+    #     name: setup virtual environment
+    #     python_location: /usr/bin/python2.6
 
     - pip-install
     # A custom script step, name value is used in the UI
