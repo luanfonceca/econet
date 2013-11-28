@@ -232,7 +232,7 @@ LOGIN_REDIRECT_URL = '/'
 # }
 
 if os.environ.get('ECONET_PRODUCTION'):
-    INSTALLED_APPS.append('south')
+    INSTALLED_APPS += 'south'
     
 if not os.environ.get('ECONET_PRODUCTION'):
     try:
