@@ -21,7 +21,11 @@ build:
           echo "pip version $(pip --version) running"
     - script:
         name: run django tests
-        code: python econet/manage.py test app accounts
+        code: |
+          python econet/manage.py test app accounts
+        name: extension test
+        code: |
+          PGPASSWORD=wercker psql -h $WERCKER_POSTGRESQL_HOST -p $WERCKER_POSTGRESQL_PORT -U postgres -d werckerdb1 -c 'CREATE DATABASE IF NOT EXISTS econet;'
 deploy:
     steps:
         - heroku-deploy
