@@ -20,18 +20,6 @@
         
         <div class="fullscreen">
             <div class="container-fluid">
-                <div class="row col-lg-offset-1">
-                    {% for message in messages %}
-                        <div class="col-lg-10" style="z-index: 1;">
-                            <div class="bs-example">
-                                <div class="alert alert-dismissable alert-{{ message.tags }}">
-                                    <button type="button" class="close" data-dismiss="alert">x</button>
-                                    {{ message }}
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
                 {% block content %}{% endblock %}
             </div>
         </div>

@@ -3,7 +3,7 @@
 
 from django.template import RequestContext
 from django.template.defaultfilters import linebreaks
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render_to_response
 from django.contrib import messages, auth
 from django.utils import simplejson as json
 from django.http import HttpResponse
@@ -12,6 +12,8 @@ from django.core.urlresolvers import reverse
 from accounts.models import User
 from app.models import *
 from app.forms import CollectSpotForm, CheckInDescartItemFormSet
+
+from app.views.site import HomeView
 
 def create(request):
     collect_spot_form = CollectSpotForm(request.POST or None)
@@ -23,17 +25,23 @@ def create(request):
             user = auth.get_user(request)
             collect_spot.collectors.add(user)
             collect_spot.save()
-
-            user.earned_points += 200
+            earned_points = 200
+            user.earned_points += earned_points
             user.save()
         messages.success(request, u'Salvou o novo Ponto.')
     else:
         messages.error(request, u'Deu Error visse')
 
-    data = {
-        'form': collect_spot_form,
-    }
-    return redirect('home')
+    context_data = HomeView().get_context_data()
+    context_data.update({
+        'earned_points': earned_points,
+        'flash_message_action': 'Adicionar um Ponto de Coleta',
+    })
+    return render_to_response(
+        'site/home.html',
+        context_data, 
+        context_instance=RequestContext(request)
+    )
 
 
 def get_json(request):
@@ -109,6 +117,7 @@ def descart_item(request, pk):
         data=request.POST, 
         instance=check_in
     )
+    earned_points = 0
     if checking_itens_formset.is_valid():
         # checking_itens_formset.save()
         for item in checking_itens_formset.cleaned_data:
@@ -116,7 +125,9 @@ def descart_item(request, pk):
                 check_in.descarted_itens.add(
                     DescartedItem.objects.create(**item)
                 )
-                user.earned_points += 20
+                earned_points += 20
+
+        user.earned_points += earned_points
         user.save()
         messages.success(request, u'Salvou as coisa.')
 
@@ -140,4 +151,14 @@ def descart_item(request, pk):
         )
     else:
         messages.error(request, u'Deu Error visse')
-    return redirect('home')
+    
+    context_data = HomeView().get_context_data()
+    context_data.update({
+        'earned_points': earned_points,
+        'flash_message_action': 'Descartar um ou mais Itens.',
+    })
+    return render_to_response(
+        'site/home.html',
+        context_data, 
+        context_instance=RequestContext(request)
+    )
