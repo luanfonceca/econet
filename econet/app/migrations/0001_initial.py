@@ -73,6 +73,15 @@ class Migration(SchemaMigration):
         ))
         db.create_unique(m2m_table_name, ['collectspot_id', 'item_id'])
 
+        # Adding model 'DescartedItem'
+        db.create_table(u'app_descarteditem', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('amount', self.gf('django.db.models.fields.CharField')(max_length=150, null=True, blank=True)),
+            ('check_in', self.gf('django.db.models.fields.related.ForeignKey')(related_name='descarted_itens', to=orm['app.CheckIn'])),
+            ('item', self.gf('django.db.models.fields.related.ForeignKey')(related_name='descarted_itens', to=orm['app.Item'])),
+        ))
+        db.send_create_signal(u'app', ['DescartedItem'])
+
         # Adding model 'CheckIn'
         db.create_table(u'app_checkin', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -81,15 +90,6 @@ class Migration(SchemaMigration):
             ('collect_spot', self.gf('django.db.models.fields.related.ForeignKey')(related_name='check_ins', to=orm['app.CollectSpot'])),
         ))
         db.send_create_signal(u'app', ['CheckIn'])
-
-        # Adding M2M table for field itens on 'CheckIn'
-        m2m_table_name = db.shorten_name(u'app_checkin_itens')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('checkin', models.ForeignKey(orm[u'app.checkin'], null=False)),
-            ('item', models.ForeignKey(orm[u'app.item'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['checkin_id', 'item_id'])
 
         # Adding M2M table for field bounties on 'CheckIn'
         m2m_table_name = db.shorten_name(u'app_checkin_bounties')
@@ -123,11 +123,11 @@ class Migration(SchemaMigration):
         # Removing M2M table for field accepted_itens on 'CollectSpot'
         db.delete_table(db.shorten_name(u'app_collectspot_accepted_itens'))
 
+        # Deleting model 'DescartedItem'
+        db.delete_table(u'app_descarteditem')
+
         # Deleting model 'CheckIn'
         db.delete_table(u'app_checkin')
-
-        # Removing M2M table for field itens on 'CheckIn'
-        db.delete_table(db.shorten_name(u'app_checkin_itens'))
 
         # Removing M2M table for field bounties on 'CheckIn'
         db.delete_table(db.shorten_name(u'app_checkin_bounties'))
@@ -161,11 +161,11 @@ class Migration(SchemaMigration):
         },
         u'app.checkin': {
             'Meta': {'object_name': 'CheckIn'},
-            'bounties': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'check_ins'", 'symmetrical': 'False', 'to': u"orm['app.Bounty']"}),
+            'bounties': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'check_ins'", 'null': 'True', 'symmetrical': 'False', 'to': u"orm['app.Bounty']"}),
             'collect_spot': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'check_ins'", 'to': u"orm['app.CollectSpot']"}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'itens': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'check_ins'", 'symmetrical': 'False', 'to': u"orm['app.Item']"}),
+            'itens': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'check_ins'", 'to': u"orm['app.Item']", 'through': u"orm['app.DescartedItem']", 'blank': 'True', 'symmetrical': 'False', 'null': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'check_ins'", 'to': u"orm['accounts.User']"})
         },
         u'app.collectspot': {
@@ -179,9 +179,16 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '100', 'separator': "'_'", 'blank': 'True', 'unique': 'True', 'populate_from': "'name'", 'overwrite': 'True'})
         },
+        u'app.descarteditem': {
+            'Meta': {'object_name': 'DescartedItem'},
+            'amount': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
+            'check_in': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'descarted_itens'", 'to': u"orm['app.CheckIn']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'item': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'descarted_itens'", 'to': u"orm['app.Item']"})
+        },
         u'app.item': {
             'Meta': {'object_name': 'Item'},
-            'bounties': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'itens'", 'symmetrical': 'False', 'to': u"orm['app.Bounty']"}),
+            'bounties': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'itens'", 'null': 'True', 'symmetrical': 'False', 'to': u"orm['app.Bounty']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
             'slug': ('django_extensions.db.fields.AutoSlugField', [], {'allow_duplicates': 'False', 'max_length': '100', 'separator': "'_'", 'blank': 'True', 'unique': 'True', 'populate_from': "'name'", 'overwrite': 'True'})
