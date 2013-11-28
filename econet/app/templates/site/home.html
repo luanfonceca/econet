@@ -67,7 +67,7 @@
                     <input id="id_descarted_itens-TOTAL_FORMS" name="descarted_itens-TOTAL_FORMS" type="hidden" value="{{ descart_item_form.forms.0.item.field.queryset.count }}">
                     <input id="id_descarted_itens-INITIAL_FORMS" name="descarted_itens-INITIAL_FORMS" type="hidden" value="0">
                     <input id="id_descarted_itens-MAX_NUM_FORMS" name="descarted_itens-MAX_NUM_FORMS" type="hidden" value="1000">
-                    {% for item in descart_item_form.forms.0.item.field.queryset %}
+                    {% for item in avalible_itens %}
                       <tr data-item="{{ item.id }}">
                         <td>
                           <label for="id_descarted_itens-{{ forloop.counter0 }}-amount">
