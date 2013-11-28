@@ -13,31 +13,27 @@
       </a>
     </div>
     <div class="navbar-collapse navbar-inverse-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li {% is_active_tab 'timeline' tab %}>
-          <a href="{% url 'timeline' %}">Atualizações</a>
-        </li>
-      </ul>
       <form class="col-lg-6">
         <div style="margin-top: 0.5em;">
           <input type="text" class="form-control" placeholder="Search" id="id_search" name="search">
         </div>
       </form>
+      <ul class="nav navbar-nav">
+        <li><a href="#timeline">Atualizações</a></li>
+        <li><a href="#ranking">Ranking</a></li>
+      </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li {% is_active_tab 'account' tab 'dropdown' %}>
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Sua conta <b class="caret"></b>
-          </a>
-          <ul class="dropdown-menu">
-            {% if request.user.pk %}
-              <li><a href="{% url 'profile' %}">Meu Perfil</a></li>
-              <li><a href="{% url 'auth_logout' %}">Sair</a></li>
-            {% else %}
+        {% if request.user.pk %}
+          <li><a href="{% url 'auth_logout' %}">Sair</a></li>
+        {% else %}
+          <li {% is_active_tab 'account' tab 'dropdown' %}>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sua conta <b class="caret"></b></a>
+            <ul class="dropdown-menu">
               <li><a href="{% url 'auth_login' %}">Acessar</a></li>
               <li><a href="{% url 'registration_register' %}">Registrar</a></li>
-            {% endif %}
-          </ul>
-        </li>
+            </ul>
+          </li>
+        {% endif %}
       </ul>
     </div><!-- /.nav-collapse -->
   </div><!-- /.container -->

@@ -9,3 +9,13 @@
 .leaflet-popup .btn {
     color: white;
 }
+
+.fake-modal-link {
+	bottom: 35px;
+	position: relative;
+	color: #2c3e50;
+}
+.fake-modal-link:hover {
+	color: #95a5a6;
+	text-decoration: none;
+}

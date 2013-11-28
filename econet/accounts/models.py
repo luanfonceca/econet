@@ -27,6 +27,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_('active'), default=True)
     is_colector = models.BooleanField(default=False, blank=True, verbose_name=u'É um coletor')
 
+    # FIXME:
+    earned_points = models.PositiveIntegerField(default=20)
+
     objects = UserManager()
 
     USERNAME_FIELD = 'email'

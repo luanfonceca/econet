@@ -10,11 +10,12 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 
 from accounts.models import User
-from app.models import CollectSpot, CheckIn, Item, Timeline
+from app.models import *
 from app.forms import CollectSpotForm, CheckInDescartItemFormSet
 
 def create(request):
     collect_spot_form = CollectSpotForm(request.POST or None)
+
     if collect_spot_form.is_valid():
         collect_spot = collect_spot_form.save()
         
@@ -22,6 +23,9 @@ def create(request):
             user = auth.get_user(request)
             collect_spot.collectors.add(user)
             collect_spot.save()
+
+            user.earned_points += 200
+            user.save()
         messages.success(request, u'Salvou o novo Ponto.')
     else:
         messages.error(request, u'Deu Error visse')
@@ -106,7 +110,14 @@ def descart_item(request, pk):
         instance=check_in
     )
     if checking_itens_formset.is_valid():
-        checking_itens_formset.save()
+        # checking_itens_formset.save()
+        for item in checking_itens_formset.cleaned_data:
+            if item['amount']:
+                check_in.descarted_itens.add(
+                    DescartedItem.objects.create(**item)
+                )
+                user.earned_points += 20
+        user.save()
         messages.success(request, u'Salvou as coisa.')
 
         description = u'''
