@@ -22,6 +22,7 @@ class CollectSpotForm(forms.ModelForm):
         }
 
     def clean_description(self):
+        itens_description = []
         if 'accepted_itens' in self.changed_data:
             itens_description = map(
                 lambda x: 'Item Aceito: %s' % x,
